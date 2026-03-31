@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Роли</title>
+</head>
+<body>
+<h1>Роли пользователей</h1>
+
+<h2>Добавить роль</h2>
+<form method="post" th:action="@{/roles/add}">
+    <input type="text" name="roleName" placeholder="Название роли" required>
+    <input type="submit" value="Добавить">
+</form>
+
+<hr>
+
+<h2>Список ролей</h2>
+<ul>
+    <li th:each="r : ${roles}">
+        <span th:text="'ID: ' + ${r.idRole} + ' | Роль: ' + ${r.roleName}"></span>
+        <form method="post" th:action="@{/roles/delete}" style="display:inline;">
+            <input type="hidden" name="id" th:value="${r.idRole}">
+            <input type="submit" value="Удалить">
+        </form>
+    </li>
+</ul>
+</body>
+</html>

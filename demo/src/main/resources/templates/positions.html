@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Должности</title>
+</head>
+<body>
+
+<h1>Управление должностями</h1>
+
+<!-- Добавление -->
+<form method="post" action="/positions/add">
+    <input type="text" name="name" placeholder="Название должности" required>
+    <input type="number" step="0.01" name="baseSalary" placeholder="Базовая зарплата" required>
+    <input type="submit" value="Добавить">
+</form>
+
+<h2>Список должностей</h2>
+
+<ul>
+    <li th:each="p : ${positions}">
+        <span th:text="'ID: ' + ${p.idPosition} +
+                       ' | Название: ' + ${p.name} +
+                       ' | Зарплата: ' + ${p.baseSalary}"></span>
+
+        <!-- Обновление -->
+        <form method="post" action="/positions/update">
+            <input type="hidden" name="id" th:value="${p.idPosition}">
+            <input type="text" name="name" th:value="${p.name}">
+            <input type="number" step="0.01" name="baseSalary" th:value="${p.baseSalary}">
+            <input type="submit" value="Изменить">
+        </form>
+
+        <!-- Удаление -->
+        <form method="post" action="/positions/delete">
+            <input type="hidden" name="id" th:value="${p.idPosition}">
+            <input type="submit" value="Удалить">
+        </form>
+    </li>
+</ul>
+
+</body>
+</html>

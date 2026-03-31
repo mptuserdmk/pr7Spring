@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Заявки на ремонт</title>
+</head>
+<body>
+
+<h1>Управление заявками</h1>
+
+<!-- Добавление -->
+<form method="post" action="/repair_requests/add">
+    <input type="text" name="description" placeholder="Описание" required>
+    <input type="text" name="status" placeholder="Статус" required>
+    <input type="date" name="createdAt" required>
+    <input type="submit" value="Добавить">
+</form>
+
+<h2>Список заявок</h2>
+
+<ul>
+    <li th:each="r : ${requests}">
+        <span th:text="'ID: ' + ${r.idRequest} +
+                       ' | Описание: ' + ${r.description} +
+                       ' | Статус: ' + ${r.status} +
+                       ' | Дата: ' + ${r.createdAt}"></span>
+
+        <!-- Обновление -->
+        <form method="post" action="/repair_requests/update">
+            <input type="hidden" name="id" th:value="${r.idRequest}">
+            <input type="text" name="description" th:value="${r.description}">
+            <input type="text" name="status" th:value="${r.status}">
+            <input type="date" name="createdAt" th:value="${r.createdAt}">
+            <input type="submit" value="Изменить">
+        </form>
+
+        <!-- Удаление -->
+        <form method="post" action="/repair_requests/delete">
+            <input type="hidden" name="id" th:value="${r.idRequest}">
+            <input type="submit" value="Удалить">
+        </form>
+    </li>
+</ul>
+
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Пользователи</title>
+</head>
+<body>
+<h1>Пользователи</h1>
+
+<h2>Добавить пользователя</h2>
+<form method="post" th:action="@{/users/add}">
+    <input type="text" name="username" placeholder="Имя пользователя" required>
+    <input type="email" name="email" placeholder="Email" required>
+    <input type="number" name="roleId" placeholder="ID роли" required>
+    <input type="submit" value="Добавить">
+</form>
+
+<hr>
+
+<h2>Список пользователей</h2>
+<ul>
+    <li th:each="u : ${users}">
+        <span th:text="'ID: ' + ${u.idUser} + ' | Имя: ' + ${u.username}
+                      + ' | Email: ' + ${u.email} + ' | Роль ID: ' + ${u.roleId}"></span>
+        <form method="post" th:action="@{/users/delete}" style="display:inline;">
+            <input type="hidden" name="id" th:value="${u.idUser}">
+            <input type="submit" value="Удалить">
+        </form>
+    </li>
+</ul>
+</body>
+</html>

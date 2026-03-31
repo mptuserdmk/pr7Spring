@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Позиции заявки</title>
+</head>
+<body>
+
+<h1>Состав заявки на ремонт</h1>
+
+<!-- Добавление -->
+<form method="post" action="/repair_request_items/add">
+    <input type="number" name="requestId" placeholder="ID заявки" required>
+    <input type="text" name="itemName" placeholder="Название" required>
+    <input type="number" name="quantity" placeholder="Количество" required>
+    <input type="number" step="0.01" name="price" placeholder="Цена" required>
+    <input type="submit" value="Добавить">
+</form>
+
+<h2>Список</h2>
+
+<ul>
+    <li th:each="i : ${items}">
+        <span th:text="'ID: ' + ${i.idItem} +
+                       ' | Заявка: ' + ${i.requestId} +
+                       ' | ' + ${i.itemName} +
+                       ' | Кол-во: ' + ${i.quantity} +
+                       ' | Цена: ' + ${i.price}"></span>
+
+        <!-- Обновление -->
+        <form method="post" action="/repair_request_items/update">
+            <input type="hidden" name="id" th:value="${i.idItem}">
+            <input type="number" name="requestId" th:value="${i.requestId}">
+            <input type="text" name="itemName" th:value="${i.itemName}">
+            <input type="number" name="quantity" th:value="${i.quantity}">
+            <input type="number" step="0.01" name="price" th:value="${i.price}">
+            <input type="submit" value="Изменить">
+        </form>
+
+        <!-- Удаление -->
+        <form method="post" action="/repair_request_items/delete">
+            <input type="hidden" name="id" th:value="${i.idItem}">
+            <input type="submit" value="Удалить">
+        </form>
+    </li>
+</ul>
+
+</body>
+</html>

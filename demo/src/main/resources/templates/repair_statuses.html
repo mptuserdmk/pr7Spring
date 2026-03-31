@@ -1,0 +1,16 @@
+<h1>Статусы ремонта</h1>
+
+<form method="post" action="/repair_statuses/add">
+    <input name="name" placeholder="Название">
+    <button>Добавить</button>
+</form>
+
+<ul>
+    <li th:each="s : ${statuses}">
+        <span th:text="${s.name}"></span>
+        <form method="post" action="/repair_statuses/delete">
+            <input type="hidden" name="id" th:value="${s.idStatus}">
+            <button>Удалить</button>
+        </form>
+    </li>
+</ul>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Device Types</title>
+</head>
+<body>
+<h1>Device Types</h1>
+
+<h2>Добавить тип</h2>
+<form method="post" action="/device_types/add">
+    <input type="text" name="deviceTypeName" placeholder="Название типа" required>
+    <input type="submit" value="Добавить">
+</form>
+
+<h2>Существующие типы</h2>
+<ul>
+    <th:block th:each="type : ${deviceTypes}">
+        <li>
+            <span th:text="${type.deviceTypeName}">Тип</span>
+
+            <form method="post" action="/device_types/update">
+                <input type="hidden" name="id" th:value="${type.idDeviceType}">
+                <input type="text" name="deviceTypeName" th:value="${type.deviceTypeName}">
+                <input type="submit" value="Изменить">
+            </form>
+
+            <form method="post" action="/device_types/delete">
+                <input type="hidden" name="id" th:value="${type.idDeviceType}">
+                <input type="submit" value="Удалить">
+            </form>
+        </li>
+    </th:block>
+</ul>
+
+</body>
+</html>
