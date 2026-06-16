@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Barbershop - Услуги</title>
@@ -37,13 +38,18 @@
 <body>
 <div class="container">
     <header>
-        <h2>Barbershop</h2>
+        <h2>✂️ Barbershop</h2>
         <div class="nav-links">
             <a th:href="@{/services}">Услуги</a>
             <a th:href="@{/appointments}">Записи</a>
             <a th:href="@{/categories}">Категории</a>
-            <a th:href="@{/users}">Пользователи</a>
+            <a th:href="@{/users}" sec:authorize="hasAnyRole('MODERATOR','ADMIN')">Пользователи</a>
             <a th:href="@{/portfolios}">Портфолио</a>
+            <a th:href="@{/admin/users}" sec:authorize="hasRole('ADMIN')">⚙ Администрирование</a>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+            <span style="color:rgba(255,255,255,0.6);font-size:0.85rem;" sec:authentication="name"></span>
+            <a th:href="@{/logout}" style="color:#ff758c;text-decoration:none;font-size:0.85rem;">Выйти</a>
         </div>
     </header>
 
@@ -54,7 +60,7 @@
         <button type="submit" class="btn">Найти</button>
     </form>
     
-    <div style="margin-bottom: 20px;">
+    <div style="margin-bottom: 20px;" sec:authorize="hasAnyRole('MODERATOR','ADMIN')">
         <a th:href="@{/services/add}" class="btn">Добавить услугу</a>
     </div>
 
@@ -79,8 +85,11 @@
             <td th:text="${service.price}"></td>
             <td th:text="${service.duration}"></td>
             <td class="actions">
-                <a th:href="@{/services/edit/{id}(id=${service.id})}" class="btn btn-edit">Ред.</a>
-                <a th:href="@{/services/delete/{id}(id=${service.id})}" class="btn btn-delete" onclick="return confirm('Удалить?')">Удалить</a>
+                <a th:href="@{/services/edit/{id}(id=${service.id})}" class="btn btn-edit"
+                   sec:authorize="hasAnyRole('MODERATOR','ADMIN')">Ред.</a>
+                <a th:href="@{/services/delete/{id}(id=${service.id})}" class="btn btn-delete"
+                   onclick="return confirm('Удалить?')"
+                   sec:authorize="hasAnyRole('MODERATOR','ADMIN')">Удалить</a>
             </td>
         </tr>
         </tbody>

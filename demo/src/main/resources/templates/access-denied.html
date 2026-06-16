@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Barbershop — Доступ запрещён</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        .error-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .error-card {
+            text-align: center;
+            padding: 60px 50px;
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 77, 79, 0.2);
+            box-shadow: 0 8px 40px rgba(0,0,0,0.4), 0 0 60px rgba(255, 77, 79, 0.05);
+            max-width: 500px;
+        }
+        .error-code {
+            font-size: 6rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ff758c, #ff7eb3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+            margin-bottom: 16px;
+        }
+        .error-icon { font-size: 3rem; margin-bottom: 12px; }
+        .error-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 12px;
+        }
+        .error-desc {
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 32px;
+            line-height: 1.6;
+        }
+        .btn-home {
+            background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
+            border: none;
+            padding: 14px 32px;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: 0.3s;
+            font-size: 1rem;
+        }
+        .btn-home:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255, 117, 140, 0.4);
+        }
+    </style>
+</head>
+<body>
+<div class="error-wrapper">
+    <div class="error-card">
+        <div class="error-icon">🔒</div>
+        <div class="error-code">403</div>
+        <div class="error-title">Доступ запрещён</div>
+        <div class="error-desc">
+            У вас недостаточно прав для просмотра этой страницы.<br>
+            Если вы считаете, что это ошибка — обратитесь к администратору.
+        </div>
+        <a th:href="@{/services}" class="btn-home">← Вернуться на главную</a>
+    </div>
+</div>
+</body>
+</html>

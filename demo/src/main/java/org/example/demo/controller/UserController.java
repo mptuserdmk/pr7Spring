@@ -1,6 +1,5 @@
 package org.example.demo.controller;
 
-import jakarta.validation.Valid;
 import org.example.demo.model.User;
 import org.example.demo.service.UserService;
 import org.springframework.data.domain.Page;
@@ -9,6 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/users")
@@ -26,7 +27,7 @@ public class UserController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,
             Model model) {
-        
+
         Page<User> userPage;
         if (search != null && !search.isEmpty()) {
             userPage = userService.searchByEmail(search, PageRequest.of(page, size));
@@ -34,12 +35,12 @@ public class UserController {
         } else {
             userPage = userService.findAll(PageRequest.of(page, size));
         }
-        
+
         model.addAttribute("users", userPage.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", userPage.getTotalPages());
         model.addAttribute("totalItems", userPage.getTotalElements());
-        
+
         return "users";
     }
 
@@ -50,7 +51,10 @@ public class UserController {
     }
 
     @PostMapping("/add")
-    public String addUser(@Valid @ModelAttribute("user") User user, BindingResult result) {
+    public String addUser(@ModelAttribute("user") User user, BindingResult result) {
+        if (user.getEmail() == null || user.getEmail().isBlank()) {
+            result.rejectValue("email", "error.user", "Email не может быть пустым");
+        }
         if (result.hasErrors()) {
             return "user-form";
         }
@@ -64,12 +68,16 @@ public class UserController {
         if (user == null) {
             return "redirect:/users";
         }
+        // Clear password hash before showing form
+        user.setPassword("");
         model.addAttribute("user", user);
         return "user-form";
     }
 
     @PostMapping("/edit/{id}")
-    public String updateUser(@PathVariable Long id, @Valid @ModelAttribute("user") User user, BindingResult result) {
+    public String updateUser(@PathVariable Long id,
+                             @ModelAttribute("user") User user,
+                             BindingResult result) {
         if (result.hasErrors()) {
             return "user-form";
         }

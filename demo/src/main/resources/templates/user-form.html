@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title th:text="${user.id != null} ? 'Редактировать пользователя' : 'Добавить пользователя'"></title>
@@ -8,13 +9,18 @@
 <body>
 <div class="container">
     <header>
-        <h2>Barbershop</h2>
+        <h2>✂️ Barbershop</h2>
         <div class="nav-links">
             <a th:href="@{/services}">Услуги</a>
             <a th:href="@{/appointments}">Записи</a>
             <a th:href="@{/categories}">Категории</a>
-            <a th:href="@{/users}">Пользователи</a>
+            <a th:href="@{/users}" sec:authorize="hasAnyRole('MODERATOR','ADMIN')">Пользователи</a>
             <a th:href="@{/portfolios}">Портфолио</a>
+            <a th:href="@{/admin/users}" sec:authorize="hasRole('ADMIN')">⚙ Администрирование</a>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+            <span style="color:rgba(255,255,255,0.6);font-size:0.85rem;" sec:authentication="name"></span>
+            <a th:href="@{/logout}" style="color:#ff758c;text-decoration:none;font-size:0.85rem;">Выйти</a>
         </div>
     </header>
 
@@ -30,16 +36,17 @@
         </div>
         
         <div class="form-group">
-            <label class="form-label">Пароль:</label>
-            <input type="password" th:field="*{password}" class="form-control" th:classappend="${#fields.hasErrors('password')} ? 'input-error'">
-            <span class="error-msg" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+            <label class="form-label">Пароль <span style="color:rgba(255,255,255,0.4);font-size:0.8em;">(оставьте пустым для сохранения текущего)</span>:</label>
+            <input type="password" th:field="*{password}" class="form-control" placeholder="••••••••" autocomplete="new-password">
         </div>
 
         <div class="form-group">
             <label class="form-label">Роль:</label>
-            <select th:field="*{role}" class="form-control">
-                <option value="USER">User</option>
-                <option value="ADMIN">Admin</option>
+            <select th:field="*{role}" class="form-control" style="background:rgba(255,255,255,0.1);color:#fff;">
+                <option th:each="r : ${T(org.example.demo.model.Role).values()}"
+                        th:value="${r.name()}"
+                        th:text="${r.name().replace('ROLE_', '')}"
+                        th:selected="${r == user.role}"></option>
             </select>
         </div>
 
