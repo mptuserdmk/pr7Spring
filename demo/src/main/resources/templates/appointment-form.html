@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${appointment.id != null} ? 'Редактировать запись' : 'Запись и Оплата'"></title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+    <header>
+        <h2>Barbershop</h2>
+        <div class="nav-links">
+            <a th:href="@{/services}">Услуги</a>
+            <a th:href="@{/appointments}">Записи</a>
+            <a th:href="@{/categories}">Категории</a>
+            <a th:href="@{/users}">Пользователи</a>
+            <a th:href="@{/portfolios}">Портфолио</a>
+        </div>
+    </header>
+
+    <h1 th:text="${appointment.id != null} ? 'Редактирование записи' : 'Оформление записи'"></h1>
+    <p th:if="${appointment.id == null}" style="color: rgba(255,255,255,0.7); font-size: 0.9em; text-align: center; margin-bottom: 30px;">
+        При оформлении записи система автоматически сэмулирует оплату (1000 RUB), отправит email-уведомление (в консоль) и сгенерирует TXT чек.
+    </p>
+
+    <form th:action="${appointment.id != null} ? @{/appointments/edit/{id}(id=${appointment.id})} : @{/appointments/book}" th:object="${appointment}" method="post">
+        
+        <input type="hidden" th:field="*{id}" th:if="${appointment.id != null}">
+
+        <div class="form-group">
+            <label class="form-label">Клиент:</label>
+            <select th:field="*{client}" class="form-control" th:classappend="${#fields.hasErrors('client')} ? 'input-error'">
+                <option value="">Выберите клиента</option>
+                <option th:each="u : ${users}" th:value="${u.id}" th:text="${u.email}"></option>
+            </select>
+            <span class="error-msg" th:if="${#fields.hasErrors('client')}" th:errors="*{client}"></span>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Мастер:</label>
+            <select th:field="*{master}" class="form-control" th:classappend="${#fields.hasErrors('master')} ? 'input-error'">
+                <option value="">Выберите мастера</option>
+                <option th:each="u : ${users}" th:value="${u.id}" th:text="${u.email}"></option>
+            </select>
+            <span class="error-msg" th:if="${#fields.hasErrors('master')}" th:errors="*{master}"></span>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Услуга:</label>
+            <select th:field="*{service}" class="form-control" th:classappend="${#fields.hasErrors('service')} ? 'input-error'">
+                <option value="">Выберите услугу</option>
+                <option th:each="s : ${services}" th:value="${s.id}" th:text="${s.name}"></option>
+            </select>
+            <span class="error-msg" th:if="${#fields.hasErrors('service')}" th:errors="*{service}"></span>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Дата и время записи:</label>
+            <input type="datetime-local" th:field="*{dateTime}" class="form-control" th:classappend="${#fields.hasErrors('dateTime')} ? 'input-error'">
+            <span class="error-msg" th:if="${#fields.hasErrors('dateTime')}" th:errors="*{dateTime}"></span>
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label">Статус:</label>
+            <input type="text" th:field="*{status}" class="form-control" placeholder="Например: PENDING" th:classappend="${#fields.hasErrors('status')} ? 'input-error'">
+            <span class="error-msg" th:if="${#fields.hasErrors('status')}" th:errors="*{status}"></span>
+        </div>
+        
+        <button type="submit" class="btn" th:text="${appointment.id != null} ? 'Сохранить изменения' : 'Оформить и Оплатить'"></button>
+        <a th:href="@{/appointments}" class="btn" style="background: rgba(255,255,255,0.1); margin-left:10px;">Отмена</a>
+    </form>
+    
+</div>
+</body>
+</html>

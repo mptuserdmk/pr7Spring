@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Barbershop - Услуги</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 5px;
+        }
+        .pagination a, .pagination span {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            text-decoration: none;
+            color: #333;
+            border-radius: 4px;
+        }
+        .pagination a.active {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        .pagination a:hover:not(.active) {
+            background-color: #f1f1f1;
+        }
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+        .btn-edit { background-color: #ffc107; color: #000; }
+        .btn-delete { background-color: #dc3545; color: #fff; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h2>Barbershop</h2>
+        <div class="nav-links">
+            <a th:href="@{/services}">Услуги</a>
+            <a th:href="@{/appointments}">Записи</a>
+            <a th:href="@{/categories}">Категории</a>
+            <a th:href="@{/users}">Пользователи</a>
+            <a th:href="@{/portfolios}">Портфолио</a>
+        </div>
+    </header>
+
+    <h1>Список услуг</h1>
+    
+    <form class="search-form" th:action="@{/services}" method="get">
+        <input type="text" name="search" th:value="${search}" class="search-input" placeholder="Поиск по названию...">
+        <button type="submit" class="btn">Найти</button>
+    </form>
+    
+    <div style="margin-bottom: 20px;">
+        <a th:href="@{/services/add}" class="btn">Добавить услугу</a>
+    </div>
+
+    <table class="table" th:if="${not #lists.isEmpty(services)}">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Название</th>
+            <th>Категория</th>
+            <th>Описание</th>
+            <th>Цена (Руб)</th>
+            <th>Длительность (мин)</th>
+            <th>Действия</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="service : ${services}">
+            <td th:text="${service.id}"></td>
+            <td th:text="${service.name}"></td>
+            <td th:text="${service.category != null ? service.category.name : 'Нет'}"></td>
+            <td th:text="${service.description}"></td>
+            <td th:text="${service.price}"></td>
+            <td th:text="${service.duration}"></td>
+            <td class="actions">
+                <a th:href="@{/services/edit/{id}(id=${service.id})}" class="btn btn-edit">Ред.</a>
+                <a th:href="@{/services/delete/{id}(id=${service.id})}" class="btn btn-delete" onclick="return confirm('Удалить?')">Удалить</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    
+    <div class="pagination" th:if="${totalPages > 0}">
+        <a th:if="${currentPage > 0}" th:href="@{/services(page=${currentPage - 1}, search=${search})}">&laquo; Пред.</a>
+        
+        <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+            <a th:href="@{/services(page=${i}, search=${search})}" 
+               th:text="${i + 1}" 
+               th:classappend="${i == currentPage} ? 'active' : ''"></a>
+        </span>
+        
+        <a th:if="${currentPage < totalPages - 1}" th:href="@{/services(page=${currentPage + 1}, search=${search})}">След. &raquo;</a>
+    </div>
+    
+    <div class="empty-state" th:if="${#lists.isEmpty(services)}">
+        Ничего не найдено.
+    </div>
+
+</div>
+</body>
+</html>

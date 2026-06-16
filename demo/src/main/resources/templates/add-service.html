@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${service.id != null} ? 'Редактировать услугу' : 'Добавить услугу'"></title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+    <header>
+        <h2>Barbershop</h2>
+        <div class="nav-links">
+            <a th:href="@{/services}">Услуги</a>
+            <a th:href="@{/appointments}">Записи</a>
+            <a th:href="@{/categories}">Категории</a>
+            <a th:href="@{/users}">Пользователи</a>
+            <a th:href="@{/portfolios}">Портфолио</a>
+        </div>
+    </header>
+
+    <h1 th:text="${service.id != null} ? 'Редактировать услугу' : 'Новая услуга'"></h1>
+    
+    <form th:action="${service.id != null} ? @{/services/edit/{id}(id=${service.id})} : @{/services/add}" th:object="${service}" method="post">
+        
+        <input type="hidden" th:field="*{id}" th:if="${service.id != null}">
+
+        <div class="form-group">
+            <label class="form-label">Категория:</label>
+            <select th:field="*{category}" class="form-control" th:classappend="${#fields.hasErrors('category')} ? 'input-error'">
+                <option value="">Выберите категорию</option>
+                <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"></option>
+            </select>
+            <span class="error-msg" th:if="${#fields.hasErrors('category')}" th:errors="*{category}"></span>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Название услуги:</label>
+            <input type="text" th:field="*{name}" class="form-control" th:classappend="${#fields.hasErrors('name')} ? 'input-error'">
+            <span class="error-msg" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label">Описание:</label>
+            <textarea th:field="*{description}" class="form-control" rows="3" th:classappend="${#fields.hasErrors('description')} ? 'input-error'"></textarea>
+            <span class="error-msg" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></span>
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label">Цена (Руб):</label>
+            <input type="number" th:field="*{price}" class="form-control" th:classappend="${#fields.hasErrors('price')} ? 'input-error'">
+            <span class="error-msg" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></span>
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label">Длительность (мин):</label>
+            <input type="number" th:field="*{duration}" class="form-control" th:classappend="${#fields.hasErrors('duration')} ? 'input-error'">
+            <span class="error-msg" th:if="${#fields.hasErrors('duration')}" th:errors="*{duration}"></span>
+        </div>
+        
+        <button type="submit" class="btn">Сохранить</button>
+        <a th:href="@{/services}" class="btn" style="background: rgba(255,255,255,0.1); margin-left:10px;">Отмена</a>
+    </form>
+    
+</div>
+</body>
+</html>

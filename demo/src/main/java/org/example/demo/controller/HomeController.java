@@ -5,10 +5,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class HomeController {
-
-    // Главная страница при заходе на localhost:8080
     @GetMapping("/")
-    public String index() {
-        return "home";
+    public String home() {
+        return "redirect:/services";
     }
 }

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Barbershop - Портфолио</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 5px;
+        }
+        .pagination a, .pagination span {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            text-decoration: none;
+            color: #333;
+            border-radius: 4px;
+        }
+        .pagination a.active {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        .pagination a:hover:not(.active) {
+            background-color: #f1f1f1;
+        }
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+        .btn-edit { background-color: #ffc107; color: #000; }
+        .btn-delete { background-color: #dc3545; color: #fff; }
+        .portfolio-img {
+            max-width: 100px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h2>Barbershop</h2>
+        <div class="nav-links">
+            <a th:href="@{/services}">Услуги</a>
+            <a th:href="@{/appointments}">Записи</a>
+            <a th:href="@{/categories}">Категории</a>
+            <a th:href="@{/users}">Пользователи</a>
+            <a th:href="@{/portfolios}">Портфолио</a>
+        </div>
+    </header>
+
+    <h1>Наше портфолио</h1>
+    
+    <form class="search-form" th:action="@{/portfolios}" method="get">
+        <input type="text" name="search" th:value="${search}" class="search-input" placeholder="Поиск по описанию...">
+        <button type="submit" class="btn">Найти</button>
+    </form>
+    
+    <div style="margin-bottom: 20px;">
+        <a th:href="@{/portfolios/add}" class="btn">Добавить работу</a>
+    </div>
+
+    <table class="table" th:if="${not #lists.isEmpty(portfolios)}">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Изображение</th>
+            <th>Описание работы</th>
+            <th>Специалист</th>
+            <th>Действия</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="p : ${portfolios}">
+            <td th:text="${p.id}"></td>
+            <td>
+                <img th:src="${p.imageUrl}" alt="Work" class="portfolio-img">
+            </td>
+            <td th:text="${p.workDescription}"></td>
+            <td th:text="${p.specialist != null ? p.specialist.email : 'Нет'}"></td>
+            <td class="actions">
+                <a th:href="@{/portfolios/edit/{id}(id=${p.id})}" class="btn btn-edit">Ред.</a>
+                <a th:href="@{/portfolios/delete/{id}(id=${p.id})}" class="btn btn-delete" onclick="return confirm('Удалить?')">Удалить</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    
+    <div class="pagination" th:if="${totalPages > 0}">
+        <a th:if="${currentPage > 0}" th:href="@{/portfolios(page=${currentPage - 1}, search=${search})}">&laquo; Пред.</a>
+        
+        <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+            <a th:href="@{/portfolios(page=${i}, search=${search})}" 
+               th:text="${i + 1}" 
+               th:classappend="${i == currentPage} ? 'active' : ''"></a>
+        </span>
+        
+        <a th:if="${currentPage < totalPages - 1}" th:href="@{/portfolios(page=${currentPage + 1}, search=${search})}">След. &raquo;</a>
+    </div>
+    
+    <div class="empty-state" th:if="${#lists.isEmpty(portfolios)}">
+        Ничего не найдено.
+    </div>
+
+</div>
+</body>
+</html>

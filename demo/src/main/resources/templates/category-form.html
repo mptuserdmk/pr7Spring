@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${category.id != null} ? 'Редактировать категорию' : 'Добавить категорию'"></title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+    <header>
+        <h2>Barbershop</h2>
+        <div class="nav-links">
+            <a th:href="@{/services}">Услуги</a>
+            <a th:href="@{/appointments}">Записи</a>
+            <a th:href="@{/categories}">Категории</a>
+            <a th:href="@{/users}">Пользователи</a>
+            <a th:href="@{/portfolios}">Портфолио</a>
+        </div>
+    </header>
+
+    <h1 th:text="${category.id != null} ? 'Редактировать категорию' : 'Новая категория'"></h1>
+    
+    <form th:action="${category.id != null} ? @{/categories/edit/{id}(id=${category.id})} : @{/categories/add}" th:object="${category}" method="post">
+        
+        <input type="hidden" th:field="*{id}" th:if="${category.id != null}">
+
+        <div class="form-group">
+            <label class="form-label">Название категории:</label>
+            <input type="text" th:field="*{name}" class="form-control" th:classappend="${#fields.hasErrors('name')} ? 'input-error'">
+            <span class="error-msg" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label">Описание:</label>
+            <textarea th:field="*{description}" class="form-control" rows="3" th:classappend="${#fields.hasErrors('description')} ? 'input-error'"></textarea>
+            <span class="error-msg" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></span>
+        </div>
+        
+        <button type="submit" class="btn">Сохранить</button>
+        <a th:href="@{/categories}" class="btn" style="background: rgba(255,255,255,0.1); margin-left:10px;">Отмена</a>
+    </form>
+    
+</div>
+</body>
+</html>

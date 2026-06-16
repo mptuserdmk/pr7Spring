@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Barbershop - Форма работы</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+    <header>
+        <h2>Barbershop</h2>
+        <div class="nav-links">
+            <a th:href="@{/services}">Услуги</a>
+            <a th:href="@{/appointments}">Записи</a>
+            <a th:href="@{/categories}">Категории</a>
+            <a th:href="@{/users}">Пользователи</a>
+            <a th:href="@{/portfolios}">Портфолио</a>
+        </div>
+    </header>
+
+    <h1 th:text="${portfolio.id == null} ? 'Добавить работу в портфолио' : 'Редактировать работу'"></h1>
+
+    <form th:action="${portfolio.id == null} ? @{/portfolios/add} : @{/portfolios/edit/{id}(id=${portfolio.id})}" 
+          th:object="${portfolio}" method="post" class="form">
+        
+        <div class="form-group">
+            <label for="specialist">Специалист:</label>
+            <select id="specialist" th:field="*{specialist}" class="form-control">
+                <option value="">Выберите специалиста</option>
+                <option th:each="u : ${users}" th:value="${u.id}" th:text="${u.email}"></option>
+            </select>
+            <div class="error" th:if="${#fields.hasErrors('specialist')}" th:errors="*{specialist}"></div>
+        </div>
+        
+        <div class="form-group">
+            <label for="imageUrl">URL Изображения:</label>
+            <input type="text" id="imageUrl" th:field="*{imageUrl}" class="form-control">
+            <div class="error" th:if="${#fields.hasErrors('imageUrl')}" th:errors="*{imageUrl}"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="workDescription">Описание работы:</label>
+            <textarea id="workDescription" th:field="*{workDescription}" class="form-control" rows="4"></textarea>
+            <div class="error" th:if="${#fields.hasErrors('workDescription')}" th:errors="*{workDescription}"></div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn" th:text="${portfolio.id == null} ? 'Добавить' : 'Сохранить'"></button>
+            <a th:href="@{/portfolios}" class="btn btn-secondary">Отмена</a>
+        </div>
+    </form>
+</div>
+</body>
+</html>

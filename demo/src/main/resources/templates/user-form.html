@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${user.id != null} ? 'Редактировать пользователя' : 'Добавить пользователя'"></title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+    <header>
+        <h2>Barbershop</h2>
+        <div class="nav-links">
+            <a th:href="@{/services}">Услуги</a>
+            <a th:href="@{/appointments}">Записи</a>
+            <a th:href="@{/categories}">Категории</a>
+            <a th:href="@{/users}">Пользователи</a>
+            <a th:href="@{/portfolios}">Портфолио</a>
+        </div>
+    </header>
+
+    <h1 th:text="${user.id != null} ? 'Редактировать пользователя' : 'Новый пользователь'"></h1>
+    
+    <form th:action="${user.id != null} ? @{/users/edit/{id}(id=${user.id})} : @{/users/add}" th:object="${user}" method="post">
+        <input type="hidden" th:field="*{id}" th:if="${user.id != null}">
+
+        <div class="form-group">
+            <label class="form-label">Email:</label>
+            <input type="email" th:field="*{email}" class="form-control" th:classappend="${#fields.hasErrors('email')} ? 'input-error'">
+            <span class="error-msg" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label">Пароль:</label>
+            <input type="password" th:field="*{password}" class="form-control" th:classappend="${#fields.hasErrors('password')} ? 'input-error'">
+            <span class="error-msg" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Роль:</label>
+            <select th:field="*{role}" class="form-control">
+                <option value="USER">User</option>
+                <option value="ADMIN">Admin</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Бонусный баланс:</label>
+            <input type="number" step="0.01" th:field="*{bonusBalance}" class="form-control" th:classappend="${#fields.hasErrors('bonusBalance')} ? 'input-error'">
+            <span class="error-msg" th:if="${#fields.hasErrors('bonusBalance')}" th:errors="*{bonusBalance}"></span>
+        </div>
+        
+        <button type="submit" class="btn">Сохранить</button>
+        <a th:href="@{/users}" class="btn" style="background: rgba(255,255,255,0.1); margin-left:10px;">Отмена</a>
+    </form>
+</div>
+</body>
+</html>

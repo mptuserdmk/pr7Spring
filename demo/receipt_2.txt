@@ -1,0 +1,7 @@
+======= BARBERSHOP CHEQUE =======
+Date: 2026-06-16 22:19:36
+Appointment ID: 2
+Service: Booking created
+Price: 1000 RUB
+Status: PAID
+=================================
